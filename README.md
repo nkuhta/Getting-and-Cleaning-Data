@@ -1,4 +1,4 @@
-# Data Types, Subsetting, and Vectorized Operations
+# Downloading and Reading Data
 1.  **R_Finding_and_Reading.r**              - Downloading internet files, reading csv, xlsx, xml files. 
 
 # References
