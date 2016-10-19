@@ -78,7 +78,7 @@ head(cameraData)
 ############    Reading Excel Files     ############
 ####################################################
 
-##  read.xlsx() is the best command and requires install.packages("xlsx") and library(xlsx) to run
+##  read_excel() is the best command and requires install.packages("readxl")
 
 if (!file.exists("data")){      #  if data directory does not exist
   dir.create("data")            #  create the data directory
@@ -90,6 +90,7 @@ if (!file.exists("data")){      #  if data directory does not exist
 
 dateDownloaded <- date()
 
+#  requires install.packages("readxl")
 library(readxl)
 
 cameraDataXLSX <- read_excel("./data/cameras.xlsx",sheet=1,col_names =T)
