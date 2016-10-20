@@ -95,7 +95,65 @@ library(readxl)
 
 cameraDataXLSX <- read_excel("./data/cameras.xlsx",sheet=1,col_names =T)
 
-#  Reading specific rows and columns
+####################################################
+#############    Reading XML Files     #############
+####################################################
+
+#  Extracting XML is the basis for most web scraping
+#  Markup - labels that give the text structure
+#  Content - The actual text of the document
+#  Start Tags - <section>
+#  End Tags - </section>
+#  Empty Tags - <line-break />
+
+#  Requires install.packages("XML")
+library(XML)
+library(methods)
+
+if (!file.exists("data")){      #  if data directory does not exist
+  dir.create("data")            #  create the data directory
+}
+
+dateDownloaded <- date()
+
+#fileUrlXML <- "https://data.baltimorecity.gov/api/views/dz54-2aru/rows.xml?accessType=DOWNLOAD"
+
+fileUrlXML <- "http://www.w3schools.com/xml/simple.xml"
+
+download.file(fileUrlXML,destfile = "./data/simple.xml")
+
+doc <- xmlParse(file = "./data/simple.xml")
+
+#   xmlTreeParse Not working with work Proxy.......
+#doc <- xmlTreeParse(fileUrlXML,isURL = T,useInternalNodes = T)
+
+rootNode <- xmlRoot(doc)
+
+xmlName(rootNode)
+    #[1] "breakfast_menu"
+
+names(rootNode)
+    # food   food   food   food   food 
+    # "food" "food" "food" "food" "food" 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
