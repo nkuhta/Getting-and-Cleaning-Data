@@ -108,7 +108,7 @@ cameraDataXLSX <- read_excel("./data/cameras.xlsx",sheet=1,col_names =T)
 
 #  Requires install.packages("XML")
 library(XML)
-library(methods)
+#library(methods)
 
 if (!file.exists("data")){      #  if data directory does not exist
   dir.create("data")            #  create the data directory
@@ -136,24 +136,72 @@ names(rootNode)
     # food   food   food   food   food 
     # "food" "food" "food" "food" "food" 
 
+rootNode[[1]]
+  # <food>
+  #   <name>Belgian Waffles</name>
+  #   <price>$5.95</price>
+  #   <description>Two of our famous Belgian Waffles with plenty of real maple syrup</description>
+  #   <calories>650</calories>
+  #   </food> 
+
+rootNode[[1]][[1]]
+  #<name>Belgian Waffles</name> 
+
+#  Programatically extract parts of the xml file - Finding matching nodes 
+xmlSApply(rootNode,xmlValue)
+    # food 
+    # "Belgian Waffles$5.95Two of our famous Belgian Waffles with plenty of real maple syrup650" 
+    # food 
+    # "Strawberry Belgian Waffles$7.95Light Belgian waffles covered with strawberries and whipped cream900" 
+    # food 
+    # "Berry-Berry Belgian Waffles$8.95Light Belgian waffles covered with an assortment of fresh berries and whipped cream900" 
+    # food 
+    # "French Toast$4.50Thick slices made from our homemade sourdough bread600" 
+    # food 
+    # "Homestyle Breakfast$6.95Two eggs, bacon or sausage, toast, and our ever-popular hash browns950" 
 
 
+xpathSApply(rootNode,"//name",xmlValue)
+    # [1] "Belgian Waffles"             "Strawberry Belgian Waffles" 
+    # [3] "Berry-Berry Belgian Waffles" "French Toast"               
+    # [5] "Homestyle Breakfast"    
+
+xpathSApply(rootNode,"//price",xmlValue)
+    #[1] "$5.95" "$7.95" "$8.95" "$4.50" "$6.95"
 
 
+####################################################
+############    Reading HTML Files     #############
+####################################################
 
+#  requires install.packages("XML")
+library(XML)
 
+fileUrlHTML <- "http://espn.go.com/nfl/team/_/name/bal/baltimore-ravens"
 
+download.file(fileUrlHTML,destfile = "./data/ravens.html")
 
+docHTML <- htmlTreeParse(file = "./data/ravens.html",useInternalNodes = T)
 
+#  htmlTreeParse doesn't work with work proxies - need to download html file
+#docHTML <- htmlTreeParse(fileUrlHTML,useInternalNodes = T)
 
+scores <- xpathSApply(docHTML,"//div[@class='score']",xmlValue)
 
+teams <- xpathSApply(docHTML,"//div[@class='game-info']",xmlValue)
 
+    # > scores 
+    # [1] "13-7"  "25-20" "19-17" "28-27" "16-10" "27-23" "22-19"
+    # [8] "19-18" "30-9"  "23-14"
+    # > teams
+    # [1] "vs  Bills"    "@  Browns"    "@  Jaguars"   "vs  Raiders" 
+    # [5] "vs  Redskins" "@  Giants"    "@  Jets"      "vs  Steelers"
+    # [9] "vs  Browns"   "@  Cowboys"   "vs  Bengals"  "vs  Dolphins"
+    # [13] "@  Patriots"  "vs  Eagles"   "@  Steelers"  "@  Bengals"  
+    # [17] "vs  Panthers" "@  Colts"     "vs  Lions"    "@  Saints"  
 
-
-
-
-
-
-
+####################################################
+############    Reading JSON Files     #############
+####################################################
 
 
