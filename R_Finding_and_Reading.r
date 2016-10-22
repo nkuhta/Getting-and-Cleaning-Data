@@ -1,4 +1,4 @@
-##  Finding and Reading different file types
+##  Finding/Downloading and Reading/Parsing different file types
 ##  Refer to Coursera Getting and Cleaning Data course from John Hopkins
 
 ####################################################
@@ -108,7 +108,6 @@ cameraDataXLSX <- read_excel("./data/cameras.xlsx",sheet=1,col_names =T)
 
 #  Requires install.packages("XML")
 library(XML)
-#library(methods)
 
 if (!file.exists("data")){      #  if data directory does not exist
   dir.create("data")            #  create the data directory
@@ -120,11 +119,15 @@ dateDownloaded <- date()
 
 fileUrlXML <- "http://www.w3schools.com/xml/simple.xml"
 
+#  Need to download file locally if xmlTreeParse doesn't work directly on a site behind a firewall
 download.file(fileUrlXML,destfile = "./data/simple.xml")
 
-doc <- xmlParse(file = "./data/simple.xml")
+doc <- xmlTreeParse(file = "./data/simple.xml",useInternalNodes = T)
 
-#   xmlTreeParse Not working with work Proxy.......
+#  xmlParse also works
+#doc <- xmlParse(file = "./data/simple.xml")
+
+#   xmlTreeParse may not work on the site directly (below) behind a firewall
 #doc <- xmlTreeParse(fileUrlXML,isURL = T,useInternalNodes = T)
 
 rootNode <- xmlRoot(doc)
@@ -203,5 +206,86 @@ teams <- xpathSApply(docHTML,"//div[@class='game-info']",xmlValue)
 ####################################################
 ############    Reading JSON Files     #############
 ####################################################
+
+#  JSON = Java Script Object Notation
+
+#  Requires install.packages("jsonlite")
+library(jsonlite)
+
+jsonLink <- "https://api.github.com/users/jtleek/repos"
+
+download.file(jsonLink,destfile = "./data/simple_github.json")
+
+jsonData <- fromJSON("./data/simple_github.json")
+
+#  May not work behind a firewall
+#jsonData <- fromJSON(jsonLink)
+
+names(jsonData)
+    # [1] "id"                "name"              "full_name"        
+    # [4] "owner"             "private"           "html_url"         
+    # [7] "description"       "fork"              "url"              
+    # [10] "forks_url"         "keys_url"          "collaborators_url"
+    # [13] "teams_url"         "hooks_url"         "issue_events_url" 
+    # [16] "events_url"        "assignees_url"     "branches_url"     
+    # [19] "tags_url"          "blobs_url"         "git_tags_url"     
+    # [22] "git_refs_url"      "trees_url"         "statuses_url"     
+    # [25] "languages_url"     "stargazers_url"    "contributors_url" 
+    # [28] "subscribers_url"   "subscription_url"  "commits_url"      
+    # [31] "git_commits_url"   "comments_url"      "issue_comment_url"
+    # [34] "contents_url"      "compare_url"       "merges_url"       
+    # [37] "archive_url"       "downloads_url"     "issues_url"       
+    # [40] "pulls_url"         "milestones_url"    "notifications_url"
+    # [43] "labels_url"        "releases_url"      "deployments_url"  
+    # [46] "created_at"        "updated_at"        "pushed_at"        
+    # [49] "git_url"           "ssh_url"           "clone_url"        
+    # [52] "svn_url"           "homepage"          "size"             
+    # [55] "stargazers_count"  "watchers_count"    "language"         
+    # [58] "has_issues"        "has_downloads"     "has_wiki"         
+    # [61] "has_pages"         "forks_count"       "mirror_url"       
+    # [64] "open_issues_count" "forks"             "open_issues"      
+    # [67] "watchers"          "default_branch"   
+
+
+names(jsonData$owner)
+    # [1] "login"               "id"                 
+    # [3] "avatar_url"          "gravatar_id"        
+    # [5] "url"                 "html_url"           
+    # [7] "followers_url"       "following_url"      
+    # [9] "gists_url"           "starred_url"        
+    # [11] "subscriptions_url"   "organizations_url"  
+    # [13] "repos_url"           "events_url"         
+    # [15] "received_events_url" "type"               
+    # [17] "site_admin"    
+
+jsonData$owner$login
+    # [1] "jtleek" "jtleek" "jtleek" "jtleek" "jtleek" "jtleek"
+    # [7] "jtleek" "jtleek" "jtleek" "jtleek" "jtleek" "jtleek"
+    # [13] "jtleek" "jtleek" "jtleek" "jtleek" "jtleek" "jtleek"
+    # [19] "jtleek" "jtleek" "jtleek" "jtleek" "jtleek" "jtleek"
+    # [25] "jtleek" "jtleek" "jtleek" "jtleek" "jtleek" "jtleek"
+
+
+#  Writing data to JSON
+myjson <- toJSON(iris,pretty=T)
+
+#cat(myjson)
+
+#  Writing JSON to dataframe
+iris2 <- fromJSON(myjson)
+
+head(iris2)
+    # Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+    # 1          5.1         3.5          1.4         0.2  setosa
+    # 2          4.9         3.0          1.4         0.2  setosa
+    # 3          4.7         3.2          1.3         0.2  setosa
+    # 4          4.6         3.1          1.5         0.2  setosa
+    # 5          5.0         3.6          1.4         0.2  setosa
+    # 6          5.4         3.9          1.7         0.4  setosa
+
+
+
+
+
 
 
