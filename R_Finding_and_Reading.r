@@ -284,6 +284,214 @@ head(iris2)
     # 6          5.4         3.9          1.7         0.4  setosa
 
 
+####################################################
+############    data.table Package     #############
+####################################################
+
+#  all functions that work in data.frame should work in data.table
+
+#  written in C so much faster
+
+#  Requires install.packages("data.table")
+library(data.table)
+
+DF <- data.frame(x=rnorm(9),y=rep(c("a","b","c"),each=3),z=rnorm(9))
+
+head(DF,3)
+    #            x y          z
+    # 1  0.3561508 a  0.4144612
+    # 2 -0.6344447 a -0.9603399
+    # 3 -1.4277596 a  0.3091748
+
+DT <- data.table(x=rnorm(9),y=rep(c("a","b","c"),each=3),z=rnorm(9))
+
+head(DT,3)
+    #             x y          z
+    # 1: -0.6298573 a -1.2225107
+    # 2: -0.4335631 a  1.2445642
+    # 3:  0.8217173 a  0.8051321
+
+#  See all data tables in memory using tables()
+
+tables()
+    #      NAME NROW NCOL MB COLS  KEY
+    # [1,] DT      9    3  1 x,y,z    
+    # Total: 1MB
+
+####################################
+###  Subsetting data.table rows  ###
+####################################
+
+#   Second row of DT data
+DT[2,]
+    #             x y        z
+    # 1: -0.4335631 a 1.244564
+
+#  DT data where y="a"
+DT[DT$y=="a",]
+    #             x y          z
+    # 1: -0.6298573 a -1.2225107
+    # 2: -0.4335631 a  1.2445642
+    # 3:  0.8217173 a  0.8051321
+
+#  Get the second and third rows of DT
+DT[c(2,3)]
+    #             x y         z
+    # 1: -0.4335631 a 1.2445642
+    # 2:  0.8217173 a 0.8051321
+
+#######################################
+###  Subsetting data.table columns  ###
+#######################################
+
+#  ???
+DT[,c(2,3)]
+    #[1] 2 3
+
+
+DT[,list(mean(x),sum(z))]
+    #           V1       V2
+    # 1: -0.5889805 3.620276
+
+DT[,table(y)]
+    # y
+    # a b c 
+    # 3 3 3 
+
+#######################################
+#####  Adding data.table columns  #####
+#######################################
+
+#  make new w=x^2 column
+DT[,w:=z^2]
+    #             x y          z          w
+    # 1: -0.6298573 a -1.2225107 1.49453236
+    # 2: -0.4335631 a  1.2445642 1.54894000
+    # 3:  0.8217173 a  0.8051321 0.64823768
+    # 4: -0.6856569 b  0.3961022 0.15689695
+    # 5: -0.2763809 b  1.0197669 1.03992459
+    # 6: -1.2662290 b  0.4074389 0.16600649
+    # 7: -0.5003794 c  1.2865992 1.65533759
+    # 8: -1.8534102 c -0.4314918 0.18618516
+    # 9: -0.4770647 c  0.1146749 0.01315034
+
+
+
+#  Mulitple operations, each statement is followed by a ";"
+
+DT[,m:={tmp <- (x+z);log2(tmp+5)}]
+
+    # > DT
+    #             x y           z            w        m
+    # 1: -0.4300163 a  3.71978682 13.836813952 3.051332
+    # 2:  0.3703545 a  0.46763242  0.218680077 2.545471
+    # 3:  0.5598239 a -0.55330449  0.306145859 2.323808
+    # 4:  0.3539869 b  0.23720397  0.056265724 2.483156
+    # 5: -0.3894442 b -0.54516166  0.297201237 2.023395
+    # 6:  1.5552544 b -0.12718615  0.016176318 2.684385
+    # 7:  0.5947958 c -1.14109509  1.302097997 2.155005
+    # 8: -0.7913301 c  0.09319389  0.008685101 2.104962
+    # 9:  1.7199524 c  2.04321265  4.174717944 3.131452
+
+
+#  Create column a which is true of x>0
+DT[,a:=x>0]
+    # > DT
+    #               x y          z           w        m     a
+    # 1:  0.385529160 a -0.5124719 0.262627461 2.284827  TRUE
+    # 2:  0.470561872 a  0.4642010 0.215482562 2.569190  TRUE
+    # 3:  0.007631844 a -1.8075590 3.267269513 1.678105  TRUE
+    # 4: -1.227941688 b  0.9890686 0.978256699 2.251303 FALSE
+    # 5:  0.254338485 b -0.1072643 0.011505626 2.363753  TRUE
+    # 6:  0.589024031 b  0.3912677 0.153090432 2.580216  TRUE
+    # 7: -2.043738175 c -0.5673387 0.321873244 1.256360 FALSE
+    # 8: -0.036929608 c  1.6330435 2.666831173 2.721616 FALSE
+    # 9:  1.315811429 c  0.0861106 0.007415036 2.678505  TRUE
+
+
+set.seed(123)
+
+#  100k letters chosen from (a,b,c) 
+DT <- data.table(x=sample(letters[1:3],1e5,TRUE))
+
+# > dim(DT)
+# [1] 100000      1
+
+#  print out how many (.N = how many) of each letter (x variable)
+DT[,.N,by=x]
+    #    x     N
+    # 1: a 33387
+    # 2: c 33201
+    # 3: b 33412
+
+##############################
+########    Keys    ##########
+##############################
+
+DT <- data.table(x=rep(c("a","b","c"),each=100),y=rnorm(300))
+
+#  Set DT key value of x
+setkey(DT,x)
+
+#   looks for DT data as a subset of the key = x = a 
+DT['a']
+    #    x           y
+    # 1: a  0.25958973
+    # 2: a  0.91751072
+    # 3: a -0.72231834
+    # ...
+    # ...
+    # ...
+    # 98: a -0.63690737
+    # 99: a  0.56539163
+    # 100: a  0.38015779
+    #      x           y
+
+##############################
+########    Joins    #########
+##############################
+
+DT1 <- data.table(x=c('a','a','b','dt1'),y=1:4)
+    #      x y
+    # 1:   a 1
+    # 2:   a 2
+    # 3:   b 3
+    # 4: dt1 4
+
+DT2 <- data.table(x=c('a','b','dt2'),z=5:7)
+    #      x z
+    # 1:   a 5
+    # 2:   b 6
+    # 3: dt2 7
+
+setkey(DT1,x);setkey(DT2,x)
+
+#  Merge data tables with common x parameters - much faster than data.frame merging ()
+merge(DT1,DT2)
+    #    x y z
+    # 1: a 1 5
+    # 2: a 2 5
+    # 3: b 3 6
+
+
+#####################################
+########  Faster Reading    #########
+#####################################
+
+big_df <- data.frame(x=rnorm(1e6),y=rnorm(1e6))
+
+file <- tempfile()
+
+write.table(big_df,file=file,row.names = F,col.names = T,sep = "\t",quote = F)
+
+#  fread is much faster  
+system.time(fread(file))
+# user  system elapsed 
+# 1.98    0.00    1.99 
+
+system.time(read.table(file,header = T,sep = "\t"))
+# user  system elapsed 
+# 3.63    0.04    3.67 
 
 
 
