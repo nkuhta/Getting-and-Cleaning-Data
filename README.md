@@ -3,6 +3,9 @@
 
 # Data Storage and Extraction Tools
 
+# Sample Problems
+1.  **R_Downloading_and_Analysis.r** - Exploring Idaho state housing data, natural gas aquisition, and Baltimore restaurant data. 
+
 
 # Swirl Stats
 Practice Excercises from http://swirlstats.com/  
