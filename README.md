@@ -2,6 +2,7 @@
 1.  **R_Finding_and_Reading.r** - Downloading files, reading/parsing csv, xlsx, xml/html, and json files.  Using data.table() basics, subsetting, column creation, multiple operations, keys, and joins.   
 
 # Data Storage and Extraction Tools
+1.  **R_Extract.r** - Reading with MySQL, HDF5, web scraping, httr package.  
 
 # Sample Problems
 1.  **R_Downloading_and_Analysis.r** - Exploring Idaho state housing data, natural gas aquisition, and Baltimore restaurant data. 
