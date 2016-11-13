@@ -290,7 +290,7 @@ library(XML)
 
 url <- "http://scholar.google.com/citations?user=HI-I6C0AAAAJ&hl=en"
 
-#html <- htmlParse(url,useInternalNodes = T)
+html <- htmlParse(url,useInternalNodes = T)
 
 #  When parsing directly doesn't work you can download
 
@@ -298,9 +298,9 @@ if (!file.exists("data")){      #  if data directory does not exist
   dir.create("data")            #  create the data directory
 }
 
-download.file(url,destfile = "./data/GS.html")
-
-html <- htmlTreeParse(file = "./data/GS.html",useInternalNodes = T)
+#  Download Method
+#download.file(url,destfile = "./data/GS.html")
+#html <- htmlTreeParse(file = "./data/GS.html",useInternalNodes = T)
 
 xpathSApply(html,"//title",xmlValue)
     #[1] "Jeff Leek - Google Scholar Citations"
@@ -323,14 +323,96 @@ content2 = content(html2,as="text")
 parsedHtml=htmlParse(content2,asText = T)
 
 xpathSApply(parsedHtml,"//title",xmlValue)
+    #[1] "Jeff Leek - Google Scholar Citations"
 
 #####################
 ###  USER/PASWDS  ###
 #####################
 
-pg2 = GET("http:/httpbin.org/basic-auth/user/passwd",authenticate("user","passwd"))
+pg1 = GET("http:/httpbin.org/basic-auth/user/passwd")
+  # > pg1
+  # Response [http://httpbin.org/basic-auth/user/passwd]
+  # Date: 2016-11-13 22:10
+  # Status: 401
+  # Content-Type: <unknown>
+  #   <EMPTY BODY>
+
+pg2 = GET("http:/httpbin.org/basic-auth/user/passwd",
+          authenticate("user","passwd"))
   
 pg2  
+  # Response [http://httpbin.org/basic-auth/user/passwd]
+  # Date: 2016-11-13 22:11
+  # Status: 200
+  # Content-Type: application/json
+  # Size: 47 B
+  # {
+  #   "authenticated": true, 
+  #   "user": "user"
+
+names(pg2)
+  # [1] "url"         "status_code"
+  # [3] "headers"     "all_headers"
+  # [5] "cookies"     "content"    
+  # [7] "date"        "times"      
+  # [9] "request"     "handle"  
+
+#############################
+######  Using Handles  ######
+#############################
+
+google = handle("http://google.com")
+
+pg1 = GET(handle=google,path="/")
+
+pg2 = GET(handle=google,path="search")
+
+#  Further Resources
+
+#  http://www.r-bloggers.com/?s=Web+Scraping
+
+
+####################################################
+#############    Reading from APIs     #############
+####################################################
+
+#  API = Application Programming Interfaces
+
+library(httr)
+
+myapp = oauth_app("twitter",
+                  key="yourComsumerKeyHere",secret = "yourConsumerSecret")
+
+sig = sign_oauth1.0(myapp,
+                    token = "yourTokenHere",
+                    token_secret = "yourTokenSecretHere")
+
+homeTL = GET("https://api.twitter.com/1.1/statuses/home_timeline.json",sig)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
