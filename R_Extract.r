@@ -390,39 +390,69 @@ sig = sign_oauth1.0(myapp,
 homeTL = GET("https://api.twitter.com/1.1/statuses/home_timeline.json",sig)
 
 
+####################################################
+########    Reading from Other Sources     #########
+####################################################
 
 
+#  There's a package for that :)  ie.  Google XXX R package
 
+#####################################
+#  Interacting directly with files
+#####################################
 
+#  file - open connection to text file 
+#  url - open connection to a url
+#  gzfile - open a connection to a .gz file
+#  bzfile - open a connection to a .bz2 file
+#  ?connections for more info
 
+#  ALWAYS CLOSE CONNECTIONS!  
 
+##########################
+#  foreign packages
+##########################
 
+#  load data from Minitab, S, SAS, SPSS, Stata, Systat
+#  Basic functions "read.xxx"
+#  read.arff (Weka)
+#  read.dta  (Stata)
+#  read.mtp  (Minitab)
+#  read.octave (Octave)
+#  read.spss  (SPSS)
+#  read.xport (SAS)
 
+#############################
+#  Other Database packages
+#############################
 
+#  RPostresSQL 
+#  RODBC (PostgreQL,MySQL,MS Access, SQLite)
+#  RMongo
 
+##########################
+#  reading images
+##########################
 
+#  jpeg
+#  readbitmap
+#  png
+#  EBImage (Bioconductor)
 
+##########################
+#  reading GIS data
+##########################
+#  GIS (Geographic information Data)
+#  rdgal
+#  rgeos
+#  raster
 
+##########################
+#  reading music data
+##########################
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#  tuneR
+#  seewave
 
 
 
