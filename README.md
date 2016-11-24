@@ -5,7 +5,7 @@
 1.  **R_Extract.r** - Reading with MySQL, HDF5, web scraping, httr package.  
 
 # Organizing Merging and Managing Data
-1.  **R_Extract.r** - Sorting and Logical operations on Data Frames, plyr sorting package, adding rows and columns to data frames.
+1.  **R_Subsetting_and_Sorting.r** - Sorting and Logical operations on Data Frames, plyr sorting package, adding rows and columns to data frames.
 
 # Sample Problems
 1.  **R_Subsetting_and_Sorting.r** - Exploring Idaho state housing data, natural gas aquisition, and Baltimore restaurant data. 
