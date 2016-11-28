@@ -6,6 +6,7 @@
 
 # Organizing Merging and Managing Data
 1.  **R_Subsetting_and_Sorting.r** - Sorting and Logical operations on Data Frames, plyr sorting package, adding rows and columns to data frames.
+2.  **R_Summarizing_Data.r** - summary and str commands, quantile and percentile analysis, making tables, check for missing values, cross tabs, and data set size.  
 
 # Sample Problems
 1.  **R_Downloading_and_Analysis.r** - Exploring Idaho state housing data, natural gas aquisition, and Baltimore restaurant data. 
